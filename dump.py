@@ -279,7 +279,9 @@ if __name__ == '__main__':
     exit_code = 0
     ssh = None
     device = get_usb_iphone()
-    if args.list_applications:
+    if len(sys.argv[1:]) == 0:
+        parser.print_help()
+    elif args.list_applications:
         list_applications(device)
     else:
         name_or_bundleid = args.target
@@ -295,8 +297,8 @@ if __name__ == '__main__':
             if output_ipa is None:
                 output_ipa = display_name
             output_ipa = re.sub('\.ipa$', '', output_ipa)
-            if pid > 0:
-                start_dump(device, pid, output_ipa)
+            if not session is None:
+                start_dump(session, output_ipa)
         except paramiko.ssh_exception.NoValidConnectionsError as e:
             print e
             exit_code = 1
